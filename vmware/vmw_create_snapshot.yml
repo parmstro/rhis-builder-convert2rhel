@@ -1,0 +1,14 @@
+---
+# vmw_create_snapshot.yml
+
+- name: Create the snapshots for the list of hosts
+  hosts: all
+  vars_files:
+  - vars/vault.yml
+  - vars/main.yml
+  vars: 
+    current_state: present
+  
+  tasks:
+  - include_tasks: tasks/snapshot_action.yml
+    loop: "{{ host_list }}"

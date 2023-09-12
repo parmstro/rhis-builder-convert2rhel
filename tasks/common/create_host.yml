@@ -1,0 +1,141 @@
+- name: "Set defaults"
+  set_fact:
+    target_mac: "{{ mac }}"
+    compute_resource: "{{ compute_resource }}"
+
+- name: "Get MAC of bare metal machine"
+  block:
+  - name: Get info on discovered hosts that meet criteria
+    include_tasks: tasks/get_foreman_list.yml
+    vars:
+      sat_resource: "{{ discovered_hosts_resouce }}"
+      sat_search_string: "{{ discovered_hosts_search }}"
+      sat_username: "{{ sat_publisher_username }}"
+      sat_password: "{{ sat_publisher_password }}"
+    # sets variables list and resources
+
+  - set_fact:
+      discovered_hosts_resources: "{{ resources }}"
+  
+  - debug:
+      var: discovered_hosts_resources
+    when: debugger == true
+
+  - set_fact:
+      discovered_mac: "{{ dhr.mac }}"
+      discovered_name: "{{ dhr.name }}"
+    # when condition is using > to account for local interface always in list
+    when: dhr.facts_hash.interfaces.split(',')|length > discovered_host_req_nic_count
+    loop: "{{ discovered_hosts_resources }}"
+    loop_control:
+      loop_var: dhr
+    register: hosts_macs_results
+    
+  - debug:
+      var: hosts_macs_results
+    when: debugger == true
+    
+  - name: "Selecting first discovered host matching criteria"
+    set_fact:
+      target: "{{ hosts_macs_results.results | json_query('[].ansible_facts') | list | shuffle | first  }}"
+  
+  - set_fact:
+      target_mac: "{{ target.discovered_mac }}"
+      target_name: "{{ target.discovered_name }}"
+
+  - debug:
+      var: 
+        - target_mac
+        - target_name
+    when: debugger == true
+        
+  when: compute_resource == "Baremetal" and mac == "ff:ff:ff:ff:ff:ff"
+  delegate_to: localhost
+
+# using sync'd content - this is messy
+- name: "Deploy the virtual host"
+  redhat.satellite.host:
+    username: "{{ sat_publisher_username }}"
+    password: "{{ sat_publisher_password }}"
+    server_url: "{{ sat_server_url }}"
+    organization: "{{ sat_organization }}"
+    location: "{{ sat_location }}"
+    name: "{{ fqdn }}"
+    comment: "{{ host_build_comment }}"
+    hostgroup: "{{ hostgroup }}"
+    kickstart_repository: "{{ kickstart_repository }}"
+    compute_resource: "{{ compute_resource }}"
+    compute_profile: "{{ compute_profile }}"
+    mac: "{{ target_mac }}"
+    build: true
+    state: present
+    compute_attributes:
+      start: "1"
+    validate_certs: "{{ sat_validate_certs }}"
+  register: deploy_response
+  when: compute_resource != "Baremetal" and deploy == true
+  delegate_to: localhost
+
+- name: "Deploy the Bare Metal host"
+  redhat.satellite.host:
+    username: "{{ sat_publisher_username }}"
+    password: "{{ sat_publisher_password }}"
+    server_url: "{{ sat_server_url }}"
+    organization: "{{ sat_organization }}"
+    location: "{{ sat_location }}"
+    name: "{{ fqdn }}"
+    comment: "{{ host_build_comment }}"
+    hostgroup: "{{ hostgroup }}"
+    mac: "{{ target_mac }}"
+    build: true
+    state: present
+    compute_attributes:
+      start: "1"
+    validate_certs: "{{ sat_validate_certs }}"
+  register: deploy_response
+  when: compute_resource == "Baremetal" and deploy == true
+  delegate_to: localhost
+
+- debug:
+    var: deploy_response
+  when: debugger == true
+
+- name: Restart the host
+  uri:
+    url: "{{ sat_server_url }}/api/v2/discovered_hosts/{{ target_name }}/reboot"
+    method: PUT
+    user: "{{ sat_publisher_username }}"
+    password: "{{ sat_publisher_password }}"
+    force_basic_auth: yes
+    validate_certs: "{{ sat_validate_certs }}"
+    status_code: 200
+    headers:
+      Content-Type: application/json
+      Accept: :application/json,version=2
+  register: restart_response
+  when: compute_resource == "Baremetal"
+  delegate_to: localhost
+
+- debug:
+    var: restart_response
+  when: compute_resource == "Baremetal" and debugger == true
+
+- name: Remove the discovered host entry
+  uri:
+    url: "{{ sat_server_url }}/api/v2/discovered_hosts/{{ target_name }}"
+    method: DELETE
+    user: "{{ sat_publisher_username }}"
+    password: "{{ sat_publisher_password }}"
+    force_basic_auth: yes
+    validate_certs: "{{ sat_validate_certs }}"
+    status_code: 200
+    headers:
+      Content-Type: application/json
+      Accept: :application/json,version=2
+  register: remove_response
+  when: compute_resource == "Baremetal"
+  delegate_to: localhost
+
+- debug:
+    var: remove_response
+  when: compute_resource == "Baremetal" and debugger == true

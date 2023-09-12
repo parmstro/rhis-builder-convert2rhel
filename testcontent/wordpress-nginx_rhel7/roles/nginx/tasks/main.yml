@@ -1,0 +1,40 @@
+---
+# Update this code to install the module for RHEL 8 and allow version switching
+- name: Install nginx
+  ansible.builtin.yum: 
+    name: nginx 
+    state: latest
+  when:  ansible_distribution_major_version == "7"
+
+- name: Install nginx AppStreams for RHEL 8
+  ansible.builtin.dnf: 
+    name: "@nginx:1.14/common"
+    state: present                                # Must be present NOT latest or will fail - this is a bug https://github.com/ansible/ansible/issues/56504
+  when: ansible_distribution_major_version == "8"
+
+- name: Copy nginx configuration for wordpress
+  ansible.builtin.template: 
+    src: default.conf 
+    dest: "/etc/nginx/conf.d/{{acm_nginx_conf_file }}"
+  notify: restart nginx
+
+- name: Update the main nginx config
+  ansible.builtin.template: 
+    src: nginx.conf 
+    dest: "/etc/nginx/nginx.conf"
+  notify: restart nginx
+
+- name: insert firewalld rule for nginx
+  ansible.posix.firewalld: 
+    port: "{{ nginx_port }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: enable and start the web server
+  ansible.builtin.service: 
+    name: nginx 
+    state: started
+    enabled: true
+
+

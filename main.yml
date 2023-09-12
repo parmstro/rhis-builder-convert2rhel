@@ -1,0 +1,23 @@
+---
+- name: "Start conversion"
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: "Confirm prerequisites"
+      ansible.builtin.include_tasks: "tasks/ensure_prereqs.yml"
+
+    - name: "Perform pre-conversion tasks"
+      ansible.builtin.include_tasks: "tasks/pre_convert_tasks.yml"
+
+    - name: "Convert systems"
+      ansible.builtin.include_tasks: "tasks/convert.yml"
+
+    - name: "Perform post-conversion tasks"
+      ansible.builtin.include_tasks: "tasks/post_convert_tasks.yml"
+
+    - name: "Verify Conversion"
+      ansible.builtin.include_tasks: "tasks/convert_verify.yml"
+
+    - name: "Commit Conversion"
+      ansible.builtin.include_tasks: "tasks/convert_commit.yml"

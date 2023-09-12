@@ -1,0 +1,2 @@
+# This task launches the coversion process.
+# If it fails it sets the rollback flag

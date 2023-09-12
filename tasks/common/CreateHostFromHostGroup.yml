@@ -1,0 +1,38 @@
+---
+# CreateHostFromHostGroup.yml
+# This play creates a host of a defined name from a defined hostgroup
+# we can't gather facts because the hosts dont exist yet
+
+- name: Create hosts from specified Satellte/Foreman hostgroups
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: "Create the host"
+    include_tasks: tasks/create_host.yml
+      
+  # Don't assume the inventory_hostname is resolvable immediately
+  # This is a long process so we can delay 300 seconds at start
+  - name: Pausing for 300s
+    debug:
+      msg: "Call to wait_for is on 300s delay - log will display when it first executes"
+
+  - name: Wait 2h for systems to come up on port 22 and contain "OpenSSH" - checking every 60s
+    wait_for:
+      timeout: 7200
+      sleep: 60
+      port: 22
+      host: "{{ inventory_hostname }}"
+      search_regex: OpenSSH
+      delay: 600
+    connection: local
+
+  - name: Wait systems to complete post configuration.
+    wait_for:
+      timeout: 600
+      sleep: 60
+      port: 22
+      host: "{{ inventory_hostname }}"
+      search_regex: OpenSSH
+      delay: 1800
+    connection: local

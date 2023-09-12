@@ -1,0 +1,5 @@
+# this task makes sure a number of repos and binaries are installed on our test systems to 
+# make life easier for our demo.
+
+# typically these sorts of things are uncovered during initial conversion tests and system discovery.
+

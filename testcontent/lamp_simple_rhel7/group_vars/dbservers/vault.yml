@@ -1,0 +1,3 @@
+vault_dbuser: mysqluser
+vault_dbname: foodb
+vault_dbuser_password: s33kr8

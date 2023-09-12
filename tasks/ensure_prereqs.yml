@@ -1,0 +1,2 @@
+# This task ensures that all the convert2RHEL prerequisites are in place
+# If any task fails the host is flagged for review

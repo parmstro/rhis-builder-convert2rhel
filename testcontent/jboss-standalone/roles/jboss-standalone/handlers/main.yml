@@ -1,0 +1,5 @@
+---
+- name: restart jboss
+  ansible.builtin.service:
+    name: jboss
+    state: restarted

@@ -1,0 +1,82 @@
+---
+# This play is a simple test of the LAMP Stack deployment
+# This currently does not test grafana - this will fail with install_grafana: true
+
+# If install_grafana: true exit 
+# Check index.php
+# Search database results for Canada
+# Content Row: Canada	9970610.00	37058856	$1,712,510,000,000.00	3.7168	$46,210.55	2018
+# Test home page
+# Check about page
+
+- name: LAMP deployment test
+  hosts: all
+
+  tasks:
+  - block:
+      - name: GET index.php
+        uri: 
+          url: "http://{{ ansible_fqdn }}:{{ httpd_port }}/index.php"
+          method: GET
+          status_code: 200
+          return_content: yes
+        register: php_result
+
+      - name: Fail if list of databases does not include nation 
+        fail:
+          msg: "Configuration Failed - could not find database 'nation'"
+        when: php_result.content is not search("nation")
+    
+      - name: Fail if search for database result cant find Canada entry
+        fail:
+          msg: "Failed to find expected record - could not find 'Canada' entry"
+        when: php_result.content is not search("Canada")
+          
+      - name: Database and PHP test succeeded
+        debug:
+          msg: Success
+
+      - name: Get the test value
+        command: "cat /root/testvalue.txt"
+        register: test_value
+       
+      - debug:
+          var: test_value.stdout
+    
+      - name: Get Home Page
+        uri:
+          url: "http://{{ ansible_fqdn }}:{{ httpd_port }}/index.html"
+          method: GET
+          status_code: 200
+          return_content: yes
+        register: home_result
+
+      - debug:
+          var: home_result
+      
+      - name: Fail if home page content is not up to date.
+        fail:
+          msg: "Configuration Failed - could not find home page content"
+        when: home_result.content is not search(test_value.stdout)
+
+      - name: Get About Page
+        uri:
+          url: "http://{{ ansible_fqdn }}:{{ httpd_port }}/about.html"
+          method: GET
+          status_code: 200
+          return_content: yes
+        register: about_result
+
+      - debug:
+          var: about_result
+      
+      - name: Fail if about page content is not up to date.
+        fail:
+          msg: "Configuration Failed - could not find about page content"
+        when: about_result.content is not search(test_value.stdout)
+
+      - name: All tests succeeded
+        debug:
+          msg: Success
+
+    when: install_grafana == false

@@ -1,0 +1,3 @@
+# This task only runs if the verify succeeds 
+# The host has been rebooted, we are running a RHEL kernel and all is good!
+# We are committed at this point and the snapshot is deleted
