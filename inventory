@@ -1,12 +1,11 @@
 [default]
 convertme1.parmstrong.ca
 convertme2.parmstrong.ca
-convertlamp.parmstrong.ca
 convertapache.parmstrong.ca
 convertjboss.parmstrong.ca
 
 [LAMP]
-convertLAMP.parmstrong.ca
+convertlamp.parmstrong.ca  hostgroup="CentOS"  kickstart_repository="CentOS7"  compute_resource="vcenter.parmstrong.ca"  compute_profile="2-Medium"  mac="00:50:56:ff:ff:ff"  dhostname=""
 
 [Apache]
 convertApache.parmstrong.ca
@@ -15,9 +14,13 @@ convertApache.parmstrong.ca
 convertjboss.parmstrong.ca
 
 [webservers]
+
+[webservers:children]
 LAMP
 Apache
 
 [dbservers]
+
+[dbservers:children]
 LAMP
 

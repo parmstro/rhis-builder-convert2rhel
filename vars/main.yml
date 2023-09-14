@@ -1,0 +1,36 @@
+vcenter_hostname: "vcenter.parmstrong.ca"
+datacenter_name: "parmstrong.ca"
+datacenter_folder: "/parmstrong.ca/vm"
+vcenter_username: "{{ vault_vcenter_username }}"
+vcenter_password: "{{ vault_vcenter_password }}"
+host_list:
+- name: convertlamp.parmstrong.ca
+  snap_name: convertlamp.original
+  snap_description: "test lamp stack convert2rhel - delete me"
+  quiesce: true
+  hostgroup: "CentOS"
+  kickstart_repository: "CentOS7"
+  compute_resource: "vcenter.parmstrong.ca"
+  compute_profile: "2-Medium"
+  mac: "00:50:56:ff:ff:ff"
+  dhostname: ""
+
+mysqlservice: "mysqld"
+mysql_port: 3306
+dbuser: "{{ vault_dbuser }}"               
+dbname: "{{ vault_dbname }}"               
+upassword: "{{ vault_dbuser_password }}"   
+install_grafana: false
+grafana_port: 3000
+
+# Variables listed here are applicable to all host groups
+
+httpd_port: 80
+
+# There is a better way to do this with a dictionary
+time_server_1: "time.parmstrong.ca"
+time_server_1_burst: "iburst"
+time_server_2: "time2.parmstrong.ca"
+time_server_2_burst: "iburst"
+time_server_3: ""
+time_server_3_burst: ""

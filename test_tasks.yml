@@ -1,0 +1,15 @@
+---
+- name: "Test a Task"
+  hosts: convertlamp.parmstrong.ca
+  become: true
+  vars_files:
+    - vars/main.yml
+    - vars/vault.yml
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python
+
+  tasks:
+
+  - name: "test the task"
+    ansible.builtin.include_tasks: "{{ task_file }}"

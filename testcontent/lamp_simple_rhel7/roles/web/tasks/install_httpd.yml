@@ -4,6 +4,7 @@
 - name: Install httpd and php for RHEL 7
   ansible.builtin.yum: 
     name:
+    - libsemanage-python
     - httpd
     - php
     - php-mysql

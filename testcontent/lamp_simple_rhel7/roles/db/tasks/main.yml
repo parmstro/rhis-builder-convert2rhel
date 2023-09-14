@@ -3,6 +3,7 @@
 - name: Install MariaDB packages for RHEL7
   ansible.builtin.yum: 
     name: 
+    - "policycoreutils-python"
     - "mariadb-server"
     - "python"
     - "MySQL-python"

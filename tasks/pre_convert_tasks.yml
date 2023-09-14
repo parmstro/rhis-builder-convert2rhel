@@ -3,3 +3,13 @@
 # Additional tasks my be specified for a given system
 # if any task fails from here on, we set the rollback flag to revert the snapshot
 
+- name: "Generate a snapshot for the host"
+  ansible.builtin.include_tasks: "vmware/tasks/snapshot_action.yml"
+  loop: "{{ host_list }}"
+  vars: 
+    current_state: present
+
+- name: "Install convert2rhel"
+  ansible.builtin.yum:
+    name: convert2rhel
+    state: present

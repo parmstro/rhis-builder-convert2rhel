@@ -3,3 +3,20 @@
 
 # typically these sorts of things are uncovered during initial conversion tests and system discovery.
 
+- name: "Install the Satellite components"
+  ansible.builtin.yum:
+    name: 
+      - "https://sat6.parmstrong.ca/pub/katello-ca-consumer-latest.noarch.rpm"
+      - "subscription-manager"
+    state: present
+
+- name: "Register to the satellite"
+  community.general.redhat_subscription:
+    org_id: "Default_Organization"
+    activationkey: "CentOS79"
+
+- name: "Install the components from Satellite"
+  ansible.builtin.yum:
+    name: 
+      - "python2-pip"
+    state: present

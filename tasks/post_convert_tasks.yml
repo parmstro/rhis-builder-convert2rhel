@@ -1,3 +1,35 @@
 # This task runs any post conversion steps like check dependencies are resolved, etc..
 # This will also perform any host specific steps
 # any failures set the rollback flag and the review flag
+- name: Configure SELinux to allow mysql port {{ mysql_port }}
+  community.general.seport: 
+    ports: "{{ mysql_port }}"
+    proto: tcp 
+    setype: mysqld_port_t
+    state: present
+
+- name: Ensure the proper log directory
+  ansible.builtin.file:
+    path: "/var/log/mysqld/"
+    state: directory
+    owner: mysql
+    group: mysql
+
+- name: Ensure the proper pid directory
+  ansible.builtin.lineinfile:
+    path: "/etc/my.cnf"
+    regexp: '^pid-file='
+    line: pid-file=/var/run/mariadb/mariadb.pid
+
+- name: Reboot the server
+  ansible.builtin.command: shutdown -r 1
+
+- name: "Wait for restart"
+  ansible.builtin.wait_for:
+    timeout: 600
+    port: 22
+    host: "{{ inventory_hostname }}"
+    search_regex: OpenSSH
+    delay: 90
+  connection: local
+

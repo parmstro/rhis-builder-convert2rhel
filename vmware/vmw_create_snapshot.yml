@@ -4,10 +4,11 @@
 - name: Create the snapshots for the list of hosts
   hosts: all
   vars_files:
-  - vars/vault.yml
-  - vars/main.yml
+  - ../vars/vault.yml
+  - ../vars/main.yml
   vars: 
     current_state: present
+    ansible_python_interpreter: /usr/bin/python
   
   tasks:
   - include_tasks: tasks/snapshot_action.yml

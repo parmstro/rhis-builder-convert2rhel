@@ -1,2 +1,17 @@
 # This task launches the coversion process.
 # If it fails it sets the rollback flag
+
+- name: "Convert the system"
+  block:
+    - name: "Launch convert2rhel"
+      ansible.builtin.command: convert2rhel -y
+
+  rescue:
+    - name: "Get an sosreport"
+      ansible.builtin.command: sosreport
+    
+    - name: "Rollback the snapshot`"
+      ansible.builtin.include_tasks: "vmware/tasks/snapshot_action.yml"
+      vars:
+        current_state: revert
+

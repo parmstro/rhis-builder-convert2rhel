@@ -1,3 +1,9 @@
 # This task only runs if the verify succeeds 
 # The host has been rebooted, we are running a RHEL kernel and all is good!
 # We are committed at this point and the snapshot is deleted
+
+- name: "Generate a snapshot for the host"
+  ansible.builtin.include_tasks: "vmware/tasks/snapshot_action.yml"
+  loop: "{{ host_list }}"
+  vars: 
+    current_state: absent
