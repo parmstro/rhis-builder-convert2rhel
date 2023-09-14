@@ -1,3 +1,11 @@
+# Satellite Variables
+sat_server_url: "https://sat6.parmstrong.ca/"
+sat_organization: "Default Organization"
+sat_location: "Default Location"
+sat_publisher_username: "{{ vault_sat_publisher_username }}"
+sat_publisher_password: "{{ vault_sat_publisher_password }}"
+sat_validate_certs: true
+
 discovered_hosts_resouce: "discovered_hosts"
 discovered_hosts_search: "disk_count = 1 and memory > 32000"
 discovered_host_req_nic_count: 1  #we use > below so does not include lo 
@@ -5,23 +13,21 @@ host_build_comment: "Created by ansible for convert2rhel test - deleteme"
 debugger: false
 deploy: true
 
+
+# VMware Variables
 vcenter_hostname: "vcenter.parmstrong.ca"
 datacenter_name: "parmstrong.ca"
 datacenter_folder: "/parmstrong.ca/vm"
 vcenter_username: "{{ vault_vcenter_username }}"
 vcenter_password: "{{ vault_vcenter_password }}"
+# snapshot hostlist
 host_list:
 - name: convertlamp.parmstrong.ca
   snap_name: convertlamp.original
   snap_description: "test lamp stack convert2rhel - delete me"
   quiesce: true
-  hostgroup: "CentOS"
-  kickstart_repository: "CentOS7"
-  compute_resource: "vcenter.parmstrong.ca"
-  compute_profile: "2-Medium"
-  mac: "00:50:56:ff:ff:ff"
-  dhostname: ""
 
+# mysql variables
 mysqlservice: "mysqld"
 mysql_port: 3306
 dbuser: "{{ vault_dbuser }}"               
@@ -30,11 +36,10 @@ upassword: "{{ vault_dbuser_password }}"
 install_grafana: false
 grafana_port: 3000
 
-# Variables listed here are applicable to all host groups
-
+# httpd variables
 httpd_port: 80
 
-# There is a better way to do this with a dictionary
+# global time servers
 time_server_1: "time.parmstrong.ca"
 time_server_1_burst: "iburst"
 time_server_2: "time2.parmstrong.ca"
