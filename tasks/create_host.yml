@@ -19,7 +19,7 @@
   
   - debug:
       var: discovered_hosts_resources
-    when: debugger == true
+    when: debugme == true
 
   - set_fact:
       discovered_mac: "{{ dhr.mac }}"
@@ -33,7 +33,7 @@
     
   - debug:
       var: hosts_macs_results
-    when: debugger == true
+    when: debugme == true
     
   - name: "Selecting first discovered host matching criteria"
     set_fact:
@@ -47,7 +47,7 @@
       var: 
         - target_mac
         - target_name
-    when: debugger == true
+    when: debugme == true
         
   when: compute_resource == "Baremetal" and mac == "ff:ff:ff:ff:ff:ff"
   delegate_to: localhost
@@ -98,7 +98,7 @@
 
 - debug:
     var: deploy_response
-  when: debugger == true
+  when: debugme == true
 
 - name: Restart the host
   uri:
@@ -118,7 +118,7 @@
 
 - debug:
     var: restart_response
-  when: compute_resource == "Baremetal" and debugger == true
+  when: compute_resource == "Baremetal" and debugme == true
 
 - name: Remove the discovered host entry
   uri:
@@ -138,4 +138,4 @@
 
 - debug:
     var: remove_response
-  when: compute_resource == "Baremetal" and debugger == true
+  when: compute_resource == "Baremetal" and debugme == true

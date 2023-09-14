@@ -1,0 +1,12 @@
+---
+- name: "Demo prerequesites"
+  hosts: LAMP
+  gather_facts: true
+  become: true
+
+  tasks:
+    - name: "Ensure CentOS prerequisites"
+      ansible.builtin.include_tasks: "tasks/_ensure_centos_prerequisites.yml"
+
+- name: "Deploy test content"
+  ansible.builtin.import_playbook: "testcontent/wordpress-nginx_rhel7/main.yml"

@@ -1,6 +1,6 @@
 ---
 - name: "Demo prerequesites"
-  hosts: convertlamp.parmstrong.ca
+  hosts: JBoss
   gather_facts: true
   become: true
 
@@ -9,4 +9,4 @@
       ansible.builtin.include_tasks: "tasks/_ensure_centos_prerequisites.yml"
 
 - name: "Deploy test content"
-  ansible.builtin.import_playbook: "testcontent/lamp_simple_rhel7/main.yml"
+  ansible.builtin.import_playbook: "testcontent/jboss-standalone/main.yml"

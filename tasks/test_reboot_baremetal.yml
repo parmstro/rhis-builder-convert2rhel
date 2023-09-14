@@ -61,7 +61,7 @@
 
 - debug:
     var: deploy_response
-  when: debugger == true
+  when: debugme== true
 
 - name: Restart the host
   uri:
@@ -80,7 +80,7 @@
 
 - debug:
     var: restart_response
-  when: host.compute_resource == "Baremetal" and debugger == true
+  when: host.compute_resource == "Baremetal" and debugme == true
 
 - name: Remove the discovered host entry
   uri:
@@ -99,4 +99,4 @@
 
 - debug:
     var: remove_response
-  when: host.compute_resource == "Baremetal" and debugger == true
+  when: host.compute_resource == "Baremetal" and debugme == true
