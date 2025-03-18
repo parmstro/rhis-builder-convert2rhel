@@ -1,0 +1,4 @@
+host_vars/centostest1.parmstrong.ca/convert2rhel.yml
+host_vars/centostest2.parmstrong.ca/convert2rhel.yml
+host_vars/oeltest1.parmstrong.ca/convert2rhel.yml
+host_vars/oeltest2.parmstrong.ca/convert2rhel.yml
