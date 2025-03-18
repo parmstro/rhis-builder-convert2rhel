@@ -1,0 +1,81 @@
+---
+
+# Fix Satellite configurations for CentOS systems
+
+# currently there is little difference between fix CentOS and Oracle except file names,
+# however we are using separate tasks for now just in case...
+
+- name: "Ensure CentOS-base.repo contains enabled attribute for all repos"
+  community.general.ini_file:
+    path: "/etc/yum.repos.d/CentOS-Base.repo"
+    section: "{{ item }}"
+    option: "enabled"
+    value: 0
+    mode: "0600"
+  loop:
+    - base
+    - updates
+    - extras
+    - centosplus
+
+- name: "Disable our kickstart repos used to install"
+  ansible.builtin.replace:
+    name: "{{ item }}"
+    regexp: "enabled=1"
+    replace: "enabled=0"
+  loop:
+    - "/etc/yum.repos.d/installCentOS.repo"
+    - "/etc/yum.repos.d/CentOS-CR.repo"
+    - "/etc/yum.repos.d/CentOS-Debuginfo.repo"
+    - "/etc/yum.repos.d/CentOS-fasttrack.repo"
+    - "/etc/yum.repos.d/CentOS-Media.repo"
+    - "/etc/yum.repos.d/CentOS-Sources.repo"
+    - "/etc/yum.repos.d/CentOS-Vault.repo"
+    - "/etc/yum.repos.d/CentOS-x86_64-kernel.repo"
+
+- name: "Cleanup the yum metadata" # noqa command-instead-of-module
+  ansible.builtin.command: "yum clean all"
+  register: cleanall_result
+  changed_when: cleanall_result.rc == 0
+
+- name: "Make sure that rhn-client-tools is NOT installed"
+  ansible.builtin.yum:
+    name: "rhn-client-tools"
+    state: absent
+
+- name: "Permanently exclude rhn-client-tools"
+  ansible.builtin.lineinfile:
+    path: "/etc/yum.conf"
+    insertafter: "EOF"
+    line: "exclude=rhn-client-tools"
+
+- name: "Force reregistration of the host with the new activation_key"
+  community.general.redhat_subscription:
+    activationkey: "{{ host_pre_convert_sat_activationkey }}"
+    org_id: "{{ host_pre_convert_sat_org_id }}"
+    force_register: true
+    state: present
+
+- name: "Ensure the system is patched to the latest" # noqa package-latest   we are patching everything
+  ansible.builtin.yum:
+    name: "*"
+    state: "latest"
+
+- name: "Ensure the latest kernel is set to boot by default"
+  ansible.builtin.command: "grubby --set-default-index=0"
+  register: grubby_result
+  changed_when: grubby_result.rc == 0
+
+- name: "Ensure the system reboots into the latest kernel"
+  ansible.builtin.reboot:
+    post_reboot_delay: 60
+    reboot_timeout: 3600
+
+- name: "Get the currently running kernel"
+  ansible.builtin.command: "uname -r"
+  register: uname_r_result
+  changed_when: uname_r_result.rc == 0
+
+- name: "Log the currently running kernel"
+  ansible.builtin.debug:
+    var: uname_r_result

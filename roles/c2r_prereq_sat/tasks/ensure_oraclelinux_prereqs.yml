@@ -1,0 +1,78 @@
+---
+
+# pre convert Remediations for Oracle Linux systems registered to Satellite
+
+- name: "Remove out of date packages that will not be upgraded and do not exist"
+  ansible.builtin.yum:
+    name:
+      - btrfs-progs
+      - iproute
+      - xfsprogs
+    state: absent
+
+- name: "Remove the standard oracle linux yum repos because they no longer work"
+  ansible.builtin.file:
+    path: "/etc/yum.repos.d/*ol7.repo"
+    state: "absent"
+
+- name: "Disable our kickstart repo used to install"
+  ansible.builtin.replace:
+    name: "/etc/yum.repos.d/installOEL.repo"
+    regexp: "enabled=1"
+    replace: "enabled=0"
+
+- name: "Make sure that rhn-client-tools is NOT installed"
+  ansible.builtin.yum:
+    name: "rhn-client-tools"
+    state: absent
+
+- name: "Permanently exclude rhn-client-tools"
+  ansible.builtin.lineinfile:
+    path: "/etc/yum.conf"
+    insertafter: "EOF"
+    line: "exclude=rhn-client-tools"
+
+- name: "Force reregistration of the host with the new activation_key"
+  community.general.redhat_subscription:
+    activationkey: "{{ host_pre_convert_sat_activationkey }}"
+    org_id: "{{ host_pre_convert_sat_org_id }}"
+    force_register: true
+    state: present
+
+- name: "Clean the yum cache"
+  ansible.builtin.command: "yum clean all"
+  register: yum_clean_all_result
+  changed_when: yum_clean_all_result.rc == 0
+
+- name: "Ensure the system is patched to the latest" # noqa package-latest   we are patching everything
+  ansible.builtin.yum:
+    name: "*"
+    state: "latest"
+
+- name: "Ensure the latest kernel is set to boot by default"
+  ansible.builtin.command: "grubby --set-default-index=0"
+  register: grubby_result
+  changed_when: grubby_result.rc == 0
+
+- name: "Ensure the system reboots into the Oracle Red Hat compatible kernel"
+  ansible.builtin.reboot:
+    reboot_timeout: 3600
+
+- name: "Get the currently running kernel"
+  ansible.builtin.command: "uname -r"
+  register: uname_r_result
+  changed_when: uname_r_result.rc == 0
+
+- name: "Log the currently running kernel"
+  ansible.builtin.debug:
+    var: uname_r_result
+
+- name: "Disable unsupported_kernel_modules"
+  community.general.modprobe:
+    name: "{{ module }}"
+    persistent: absent
+    state: absent
+  loop: "{{ unsupported_kernel_modules }}"
+  loop_control:
+    loop_var: module
+  notify: "Reboot_host"

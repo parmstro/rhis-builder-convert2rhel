@@ -1,4 +1,0 @@
-# This task runs the host specific verify tasks
-# failure sets the rollback flag and the review flag
-- name: "Test System"
-  ansible.builtin.include_tasks: "tasks/mariadb_deploymenttest.yml"

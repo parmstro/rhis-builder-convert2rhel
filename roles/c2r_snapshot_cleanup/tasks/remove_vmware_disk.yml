@@ -1,0 +1,21 @@
+---
+# remove the snapshot disk
+
+- name: "Remove disk to the convert2rhel host in vmware"
+  connection: local
+  community.vmware.vmware_guest_disk:
+    hostname: "{{ vmware_vcenter_hostname }}"
+    username: "{{ vmware_vcenter_username }}"
+    password: "{{ vmware_vcenter_password }}"
+    datacenter: "{{ vmware_datacenter_name }}"
+    name: "{{ vmware_machine_name }}"
+    disk:
+      - state: "absent"
+        scsi_controller: "{{ snapshot_disk_controller }}"
+        unit_number: "{{ snapshot_disk_unit }}"
+        destroy: "true"
+
+- name: "Write the new UUID to the file"
+  ansible.builtin.file:
+    path: "/etc/lvm_snapshots/c2r_{{ snapshot_vg }}_snapshot_disk_uuid"
+    state: "absent"

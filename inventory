@@ -1,11 +1,21 @@
+[provisioner]
+localhost
+
+[c2r_hosts]
+centostest1.parmstrong.ca
+centostest2.parmstrong.ca
+oeltest1.parmstrong.ca  ansible_python_interpreter=/usr/bin/python
+oeltest2.parmstrong.ca ansible_python_interpreter=/usr/bin/python
+
+# Below this line is for demo preparation
 [default]
 convertme1.parmstrong.ca
-convertme2.parmstrong.ca
+convertlamp.parmstrong.ca
 convertapache.parmstrong.ca
 convertjboss.parmstrong.ca
 
 [LAMP]
-convertlamp.parmstrong.ca  hostgroup="CentOS"  kickstart_repository="CentOS7"  compute_resource="vcenter.parmstrong.ca"  compute_profile="2-Medium"  mac="00:50:56:ff:ff:ff"  dhostname=""
+convertlamp.parmstrong.ca
 
 [Apache]
 convertApache.parmstrong.ca
