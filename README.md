@@ -1,5 +1,9 @@
 # rhis-builder-convert2rhel
 
+Fork it. Clone it. Configure it. Test it. Change it. Commit it. Create a PR.
+
+***
+
 This repository contains the ansible automation files for a convert2rhel with Ansible Automation Platform and Satellite demo.
 
 ## Purpose:
