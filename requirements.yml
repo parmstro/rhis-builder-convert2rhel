@@ -1,0 +1,5 @@
+---
+
+collections:
+  - name: infra.convert2rhel
+  - name: infra.lvm_snapshots
