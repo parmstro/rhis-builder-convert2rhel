@@ -1,5 +1,5 @@
 ---
-# There are 13 variables ending in _vault
+# There are 12 variables ending in _vault
 # You will need to create your own vault file to store these varaibles.
 # include the vault file by referencing the extra vars variable 'vault_path' or by using the ansible commandline switch
 # See run_role.yml 
