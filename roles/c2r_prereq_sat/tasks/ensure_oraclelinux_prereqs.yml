@@ -68,6 +68,7 @@
     var: uname_r_result
 
 - name: "Disable unsupported_kernel_modules"
+  when: unsupported_kernel_modules is defined
   community.general.modprobe:
     name: "{{ module }}"
     persistent: absent
