@@ -1,6 +1,7 @@
 ---
 # remove the snapshot disk
 
+# for local connection use force the use of the controllers python interpreter
 - name: "Remove disk to the convert2rhel host in vmware"
   connection: local
   community.vmware.vmware_guest_disk:
@@ -14,6 +15,9 @@
         scsi_controller: "{{ snapshot_disk_controller }}"
         unit_number: "{{ snapshot_disk_unit }}"
         destroy: "true"
+    validate_certs: "{{ vmware_validate_certs | default(false) }}"
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
 
 - name: "Write the new UUID to the file"
   ansible.builtin.file:
