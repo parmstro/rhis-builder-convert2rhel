@@ -32,6 +32,8 @@
         scsi_type: '{{ snapshot_disk_scsi_type }}'
         disk_mode: '{{ snapshot_disk_mode }}'
   register: disk_facts
+  vars:
+    ansilbe_python_interpreter: /usr/bin/python3
 
 - name: "Get the current list of disks"
   ansible.builtin.setup:
