@@ -33,7 +33,7 @@
         disk_mode: '{{ snapshot_disk_mode }}'
   register: disk_facts
   vars:
-    ansilbe_python_interpreter: /usr/bin/python3
+    ansible_python_interpreter: /usr/bin/python3
 
 - name: "Get the current list of disks"
   ansible.builtin.setup:
