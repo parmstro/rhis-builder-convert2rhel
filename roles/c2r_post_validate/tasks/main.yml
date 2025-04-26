@@ -48,3 +48,8 @@
     msg: "{{ failed_services | map(attribute='name') }}"
   vars:
     failed_services: "{{ ansible_facts['services'].values() | selectattr('status', 'equalto', 'failed') }}"
+
+- name: "Demonstrate Failure Path"
+  when: demonstrate_failure_path is defined and demonstrate_failure_path
+  ansible.builtin.fail:
+    msg: "Artificially generating failure to demostrate rollback"
