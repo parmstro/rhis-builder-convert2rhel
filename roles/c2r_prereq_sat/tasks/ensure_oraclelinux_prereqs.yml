@@ -46,7 +46,7 @@
 
 - name: "Ensure the system is patched to the latest" # noqa package-latest   we are patching everything
   ansible.builtin.yum:
-    name: "*"
+    name: '*'
     state: "latest"
 
 - name: "Ensure the latest kernel is set to boot by default"
