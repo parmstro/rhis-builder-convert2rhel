@@ -19,7 +19,7 @@
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
 
-- name: "Write the new UUID to the file"
+- name: "Cleanup the UUID file for the removed disk"
   ansible.builtin.file:
     path: "/etc/lvm_snapshots/c2r_{{ snapshot_vg }}_snapshot_disk_uuid"
     state: "absent"

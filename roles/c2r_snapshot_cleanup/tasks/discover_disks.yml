@@ -74,6 +74,6 @@
 
 
 # If we got this far, either we need to remove the disk
-- name: "Add a new disk to the system if we need one"
+- name: "Remove the snapshot disk from the system."
   when: remove_disk
   ansible.builtin.include_tasks: "remove_snapshot_disk.yml"
