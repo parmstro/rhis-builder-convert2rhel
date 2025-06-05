@@ -6,6 +6,8 @@ Fork it. Clone it. Configure it. Test it. Change it. Commit it. Create a PR.
 
 This repository contains the ansible automation files for a convert2rhel with Ansible Automation Platform and Satellite demo.
 
+See rhis-builder-vault-SAMPLE repo for secrets definitions.
+
 ## Purpose:
 
 The purpose is to demonstrate the ability to convert CentOS 7, Oracle Enterprise Linux and like operating systems to Red Hat Enterprise Linux 7 in bulk using AAP and Satellite as the engines for automation and content management. The environment uses the Red Hat Infrastructure Standard Adoption Model deployment, including Red Hat Identity Management.
