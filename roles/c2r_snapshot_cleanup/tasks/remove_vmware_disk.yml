@@ -4,7 +4,7 @@
 # for local connection use force the use of the controllers python interpreter
 - name: "Remove disk to the convert2rhel host in vmware"
   connection: local
-  community.vmware.vmware_guest_disk:
+  vmware.vmware.vmware_guest_disk:
     hostname: "{{ vmware_vcenter_hostname }}"
     username: "{{ vmware_vcenter_username }}"
     password: "{{ vmware_vcenter_password }}"

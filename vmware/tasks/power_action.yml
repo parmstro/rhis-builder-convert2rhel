@@ -5,7 +5,7 @@
     force: false
 
 - name: Find Guest's Folder using name
-  community.vmware.vmware_guest_find:
+  vmware.vmware.vmware_guest_find:
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
@@ -18,7 +18,7 @@
   when: current_state == "powered-on"
 
 - name: "Power Action - power state set to: {{ current_state }} for host: {{ item.name }}"
-  community.vmware.vmware_guest_powerstate:
+  vmware.vmware.vmware_guest_powerstate:
     hostname: "{{ vcenter_hostname }}"
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
