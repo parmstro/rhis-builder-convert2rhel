@@ -1,7 +1,7 @@
 ---
 # do the actual snapshot action - one of present, absent, revert, remove_all
   - name: "Snapshot Action - snapshot state set to: {{ current_state }} for host: {{ item.name }}"
-    vmware.vmware.vmware_guest_snapshot:
+    vmware.vmware.vm_snapshot:
       hostname: "{{ vcenter_hostname }}"
       username: "{{ vcenter_username }}"
       password: "{{ vcenter_password }}"
