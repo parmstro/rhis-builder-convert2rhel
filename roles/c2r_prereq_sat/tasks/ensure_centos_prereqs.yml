@@ -22,6 +22,7 @@
     name: "{{ item }}"
     state: absent
   loop:
+    - "/etc/yum.repos.d/CentOS-Base.repo"
     - "/etc/yum.repos.d/CentOS-CR.repo"
     - "/etc/yum.repos.d/CentOS-Debuginfo.repo"
     - "/etc/yum.repos.d/CentOS-fasttrack.repo"
@@ -53,7 +54,7 @@
 
 - name: "Force reregistration of the host with the new activation_key"
   ansible.builtin.command:
-    cmd: "subscription-manager register --force --org='{{ centos_host_pre_convert_sat_org_id }}' activationkey='{{ centos_host_pre_convert_sat_activationkey }}'" # noqa yaml[line-length]
+    cmd: "subscription-manager register --force --org='{{ centos_host_pre_convert_sat_org_id }}' --activationkey='{{ centos_host_pre_convert_sat_activationkey }}'" # noqa yaml[line-length]
   register: subman_result
   changed_when: subman_result.rc == 0
 

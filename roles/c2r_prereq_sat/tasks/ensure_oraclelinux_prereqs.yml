@@ -45,7 +45,7 @@
 
 - name: "Force reregistration of the host with the new activation_key"
   ansible.builtin.command:
-    cmd: "subscription-manager register --force --org='{{ oel_host_pre_convert_sat_org_id }}' activationkey='{{ oel_host_pre_convert_sat_activationkey }}'"
+    cmd: "subscription-manager register --force --org='{{ oel_host_pre_convert_sat_org_id }}' --activationkey='{{ oel_host_pre_convert_sat_activationkey }}'"
   register: subman_result
   changed_when: subman_result.rc == 0
 
