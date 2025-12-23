@@ -25,6 +25,16 @@
       enabled=1
     mode: "0644"
 
+- name: Replace old hostname with new hostname (requires Ansible >= 2.4)
+  ansible.builtin.replace:
+    path: /etc/yum.repos.d/{{ item }}
+    regexp: 'gpgcheck=1'
+    replace: 'gpgcheck=0'
+  loop:
+    - "oracle-linux-ol7.repo"
+    - "uek-ol7.repo"
+    - "virt-ol7.repo"
+
 - name: "Make sure that rhn-client-tools is NOT installed"
   ansible.builtin.yum:
     name: "rhn-client-tools"
