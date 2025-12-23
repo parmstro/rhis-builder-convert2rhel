@@ -12,8 +12,12 @@
 
 - name: "Remove the standard oracle linux yum repos because they no longer work"
   ansible.builtin.file:
-    path: "/etc/yum.repos.d/*ol7.repo"
+    path: "/etc/yum.repos.d/{{ item }}"
     state: "absent"
+  loop:
+    - "oracle-linux-ol7.repo"
+    - "uek-ol7.repo"
+    - "virt-ol7.repo"
 
 - name: "Ensure CentOS-archive.repo is present"
   ansible.builtin.copy:
@@ -25,16 +29,11 @@
       enabled=1
     mode: "0644"
 
-- name: Replace old hostname with new hostname (requires Ansible >= 2.4)
-  ansible.builtin.replace:
-    path: /etc/yum.repos.d/{{ item }}
-    regexp: 'gpgcheck=1'
-    replace: 'gpgcheck=0'
-  loop:
-    - "oracle-linux-ol7.repo"
-    - "uek-ol7.repo"
-    - "virt-ol7.repo"
-
+- name: "Clean the yum cache"
+  ansible.builtin.command: "yum clean all"
+  register: yum_clean_all_result
+  changed_when: yum_clean_all_result.rc == 0
+  
 - name: "Make sure that rhn-client-tools is NOT installed"
   ansible.builtin.yum:
     name: "rhn-client-tools"
