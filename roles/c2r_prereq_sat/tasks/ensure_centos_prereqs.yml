@@ -48,11 +48,10 @@
     line: "exclude=rhn-client-tools"
 
 - name: "Force reregistration of the host with the new activation_key"
-  community.general.redhat_subscription:
-    activationkey: "{{ centos_host_pre_convert_sat_activationkey }}"
-    org_id: "{{ centos_host_pre_convert_sat_org_id }}"
-    force_register: true
-    state: present
+  ansible.builtin.command:
+    cmd: "subscription-manager register --force --org='{{ centos_host_pre_convert_sat_org_id }}' activationkey='{{ centos_host_pre_convert_sat_activationkey }}'" # noqa yaml[line-length]
+  register: subman_result
+  changed_when: subman_result.rc == 0
 
 - name: "Ensure the system is patched to the latest" # noqa package-latest   we are patching everything
   ansible.builtin.yum:

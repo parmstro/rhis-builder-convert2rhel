@@ -33,11 +33,10 @@
     line: "exclude=rhn-client-tools"
 
 - name: "Force reregistration of the host with the new activation_key"
-  community.general.redhat_subscription:
-    activationkey: "{{ oel_host_pre_convert_sat_activationkey }}"
-    org_id: "{{ oel_host_pre_convert_sat_org_id }}"
-    force_register: true
-    state: present
+  ansible.builtin.command:
+    cmd: "subscription-manager register --force --org='{{ oel_host_pre_convert_sat_org_id }}' activationkey='{{ oel_host_pre_convert_sat_activationkey }}'"
+  register: subman_result
+  changed_when: subman_result.rc == 0
 
 - name: "Clean the yum cache"
   ansible.builtin.command: "yum clean all"
