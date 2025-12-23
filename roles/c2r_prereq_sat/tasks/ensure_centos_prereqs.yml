@@ -23,7 +23,6 @@
     regexp: "enabled=1"
     replace: "enabled=0"
   loop:
-    - "/etc/yum.repos.d/installCentOS.repo"
     - "/etc/yum.repos.d/CentOS-CR.repo"
     - "/etc/yum.repos.d/CentOS-Debuginfo.repo"
     - "/etc/yum.repos.d/CentOS-fasttrack.repo"

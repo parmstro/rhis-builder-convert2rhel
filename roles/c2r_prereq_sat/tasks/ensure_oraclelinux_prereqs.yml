@@ -15,11 +15,11 @@
     path: "/etc/yum.repos.d/*ol7.repo"
     state: "absent"
 
-- name: "Disable our kickstart repo used to install"
-  ansible.builtin.replace:
-    name: "/etc/yum.repos.d/installOEL.repo"
-    regexp: "enabled=1"
-    replace: "enabled=0"
+# - name: "Disable our kickstart repo used to install"
+#   ansible.builtin.replace:
+#     name: "/etc/yum.repos.d/installOEL.repo"
+#     regexp: "enabled=1"
+#     replace: "enabled=0"
 
 - name: "Make sure that rhn-client-tools is NOT installed"
   ansible.builtin.yum:
