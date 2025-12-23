@@ -15,11 +15,17 @@
     path: "/etc/yum.repos.d/*ol7.repo"
     state: "absent"
 
-# - name: "Disable our kickstart repo used to install"
-#   ansible.builtin.replace:
-#     name: "/etc/yum.repos.d/installOEL.repo"
-#     regexp: "enabled=1"
-#     replace: "enabled=0"
+- name: "Ensure CentOS-archive.repo is present"
+  ansible.builtin.copy:
+    dest: "/etc/yum.repos.d/CentOS-archive.repo"
+    content: |
+      [base]
+      name=CentOS-$releasever - Base
+      baseurl=http://vault.centos.org/centos/$releasever/os/$basearch/
+      enabled=1
+      gpgcheck=1
+      gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+    mode: "0644"
 
 - name: "Make sure that rhn-client-tools is NOT installed"
   ansible.builtin.yum:
@@ -32,11 +38,21 @@
     insertafter: "EOF"
     line: "exclude=rhn-client-tools"
 
+- name: "Ensure subscription-manager is installed"
+  ansible.builtin.yum:
+    name: "subscription-manager"
+    state: present
+
 - name: "Force reregistration of the host with the new activation_key"
   ansible.builtin.command:
     cmd: "subscription-manager register --force --org='{{ oel_host_pre_convert_sat_org_id }}' activationkey='{{ oel_host_pre_convert_sat_activationkey }}'"
   register: subman_result
   changed_when: subman_result.rc == 0
+
+- name: "Ensure CentOS-archive.repo is absent"
+  ansible.builtin.file:
+    path: "/etc/yum.repos.d/CentOS-archive.repo"
+    state: absent
 
 - name: "Clean the yum cache"
   ansible.builtin.command: "yum clean all"
