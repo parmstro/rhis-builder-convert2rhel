@@ -49,8 +49,8 @@
 
 - name: "Force reregistration of the host with the new activation_key"
   community.general.redhat_subscription:
-    activationkey: "{{ host_pre_convert_sat_activationkey }}"
-    org_id: "{{ host_pre_convert_sat_org_id }}"
+    activationkey: "{{ centos_host_pre_convert_sat_activationkey }}"
+    org_id: "{{ centos_host_pre_convert_sat_org_id }}"
     force_register: true
     state: present
 
