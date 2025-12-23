@@ -19,6 +19,18 @@
     - "uek-ol7.repo"
     - "virt-ol7.repo"
 
+- name: "Get a gpg key"
+  ansible.builtin.command:
+    cmd: "curl https://vault.centos.org/RPM-GPG-KEY-CentOS-7 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7"
+  register: curl_result
+  changed_when: curl_result.rc == 0
+
+- name: "import the gpgkey"
+  ansible.builtin.command:
+    cmd: "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7"
+  register: rpm_result
+  changed_when: rpm_result.rc == 0
+
 - name: "Ensure CentOS-archive.repo is present"
   ansible.builtin.copy:
     dest: "/etc/yum.repos.d/CentOS-archive.repo"
@@ -33,7 +45,7 @@
   ansible.builtin.command: "yum clean all"
   register: yum_clean_all_result
   changed_when: yum_clean_all_result.rc == 0
-  
+
 - name: "Make sure that rhn-client-tools is NOT installed"
   ansible.builtin.yum:
     name: "rhn-client-tools"
