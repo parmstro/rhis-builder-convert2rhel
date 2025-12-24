@@ -5,17 +5,17 @@
 - name: "Remove disk to the convert2rhel host in vmware"
   connection: local
   community.vmware.vmware_guest_disk:
-    hostname: "{{ vmware_vcenter_hostname }}"
-    username: "{{ vmware_vcenter_username }}"
-    password: "{{ vmware_vcenter_password }}"
-    datacenter: "{{ vmware_datacenter_name }}"
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ datacenter_name }}"
     name: "{{ vmware_machine_name }}"
     disk:
       - state: "absent"
         scsi_controller: "{{ snapshot_disk_controller }}"
         unit_number: "{{ snapshot_disk_unit }}"
         destroy: "true"
-    validate_certs: "{{ vmware_validate_certs | default(false) }}"
+    validate_certs: "{{ validate_certs | default(false) }}"
   vars:
     ansible_python_interpreter: "/usr/bin/python3"
 
