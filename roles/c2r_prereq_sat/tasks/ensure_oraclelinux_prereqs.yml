@@ -20,13 +20,13 @@
     - "virt-ol7.repo"
 
 - name: "Get a gpg key"
-  ansible.builtin.command:
+  ansible.builtin.command:  # noqa command-instead-of-module
     cmd: "curl https://vault.centos.org/RPM-GPG-KEY-CentOS-7 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7"
   register: curl_result
   changed_when: curl_result.rc == 0
 
-- name: "import the gpgkey"
-  ansible.builtin.command:
+- name: "Import the gpgkey"
+  ansible.builtin.command:  # noqa command-instead-of-module
     cmd: "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7"
   register: rpm_result
   changed_when: rpm_result.rc == 0

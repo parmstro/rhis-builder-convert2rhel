@@ -17,7 +17,7 @@
 # for local connection use force the use of the controllers python interpreter
 - name: "Add disk to the convert2rhel host in vmware"
   connection: local
-  vmware.vmware.vmware_guest_disk:
+  community.vmware.vmware_guest_disk:
     hostname: "{{ vmware_vcenter_hostname }}"
     username: "{{ vmware_vcenter_username }}"
     password: "{{ vmware_vcenter_password }}"
