@@ -22,7 +22,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     datacenter: "{{ datacenter_name }}"
-    name: "{{ vmware_machine_name }}"
+    name: "{{ ansible_fqdn }}"
     disk:
       - size_gb: "{{ snapshot_disk_size_gb }}"
         type: "{{ snapshot_disk_provision_type }}"

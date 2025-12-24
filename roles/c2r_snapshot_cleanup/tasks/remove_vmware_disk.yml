@@ -9,7 +9,7 @@
     username: "{{ vcenter_username }}"
     password: "{{ vcenter_password }}"
     datacenter: "{{ datacenter_name }}"
-    name: "{{ vmware_machine_name }}"
+    name: "{{ ansible_fqdn }}"
     disk:
       - state: "absent"
         scsi_controller: "{{ snapshot_disk_controller }}"
