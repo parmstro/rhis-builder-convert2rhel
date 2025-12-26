@@ -69,6 +69,8 @@
   community.general.lvg:
     vg: "{{ snapshot_vg }}"
     pvs: "{{ current_pvs }}"
+    reset_pv_uuid: false
+    reset_vg_uuid: false
 
 - name: "Get the device information of the new snapshot device"
   ansible.builtin.command: "blkid -o export {{ new_snapshot_device }}"
