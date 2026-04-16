@@ -1,5 +1,9 @@
 ---
 
 collections:
-  - name: infra.convert2rhel
+  - name: infra.leapp
+    version: ">=1.7"
   - name: infra.lvm_snapshots
+    version: ">=2.1"
+  - name: infra.convert2rhel
+    version: ">=1.2"
